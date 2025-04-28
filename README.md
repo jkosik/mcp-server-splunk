@@ -70,7 +70,7 @@ Update `~/.cursor/mcp.json`
 {
   "mcpServers": {
     "splunk_stdio": {
-      "name": "Splunk MCP Server (STDIO)",
+      "name": "Splunk MCP Server (STDIO mode)",
       "description": "MCP server for Splunk integration",
       "type": "stdio",
       "command": "/Users/juraj/data/github.com/jkosik/mcp-server-splunk/cmd/mcp-server-splunk/mcp-server-splunk",
