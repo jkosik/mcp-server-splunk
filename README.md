@@ -64,10 +64,14 @@ curl -X POST "http://localhost:3001/message?sessionId=YOUR_SESSION_ID" \
 
 ## Cursor integration
 
+<!-- HTML5 video tag for local/documentation viewing -->
 <video width="400" controls>
   <source src="docs/mcp-short.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
+
+<!-- GitHub-compatible video link -->
+[Watch the demo video](https://github.com/jkosik/mcp-server-splunk/raw/main/docs/mcp-short.mp4)
 
 Integrate STDIO or SSE MCP Servers (see below) and use Cursor Chat.
 Cursor will automatically try to use MCP Tools, Prompts or Re
@@ -75,7 +79,7 @@ Sample prompts:
 - `How many MCP tools for Splunk are available?`
 - `How many Splunk indexes do we have?`
 - `Can you list first 5 Splunk macros including underlying queries?`
-- `How many alers with "BT_Alert_CRITICAL" in the name were triggered in the last day?`
+- `How many alers with "Alert_CRITICAL" in the name were triggered in the last day?`
 - `Check the Data Dictionary (MCP Resource) and find the contact person for the Splunk index XYZ.`
 
 Example from Cursor Chat. Cursor automatically understands need to use two MCP Tools:
