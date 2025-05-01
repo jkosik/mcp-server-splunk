@@ -64,14 +64,14 @@ curl -X POST "http://localhost:3001/message?sessionId=YOUR_SESSION_ID" \
 
 ## Cursor integration
 
-<!-- HTML5 video tag for local/documentation viewing -->
+<!-- For GitHub markdown -->
+![Demo Video](docs/mcp-short.mp4)
+
+<!-- Alternative HTML5 video tag -->
 <video width="400" controls>
   <source src="docs/mcp-short.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
-
-<!-- GitHub-compatible video link -->
-[Watch the demo video](https://github.com/jkosik/mcp-server-splunk/raw/main/docs/mcp-short.mp4)
 
 Integrate STDIO or SSE MCP Servers (see below) and use Cursor Chat.
 Cursor will automatically try to use MCP Tools, Prompts or Re
