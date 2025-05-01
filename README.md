@@ -63,6 +63,7 @@ curl -X POST "http://localhost:3001/message?sessionId=YOUR_SESSION_ID" \
 ```
 
 ## Cursor integration
+By configuring MCP Settings in Cursor, you can include remote data directly into the LLM context.
 
 ![Demo](docs/mcp-short.gif)
 
@@ -74,11 +75,6 @@ Sample prompts:
 - `Can you list first 5 Splunk macros including underlying queries?`
 - `How many alers with "Alert_CRITICAL" in the name were triggered in the last day?`
 - `Check the Data Dictionary (MCP Resource) and find the contact person for the Splunk index XYZ.`
-
-Example from Cursor Chat. Cursor automatically understands need to use two MCP Tools:
-
-<img src="docs/image-macro-index.png" width="400" alt="Example of Cursor Chat using MCP Server for Splunk">
-
 
 ### STDIO mode
 Build the server:
