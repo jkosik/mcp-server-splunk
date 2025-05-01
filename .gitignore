@@ -1,3 +1,4 @@
+.DS_Store
 wip/*
 cmd/mcp-server-splunk/mcp-server-splunk
 docs/images*
