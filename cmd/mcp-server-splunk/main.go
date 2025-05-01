@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/jkosik/mcp-server-splunk/internal/splunk"
 
@@ -37,6 +39,14 @@ func main() {
 		server.WithRecovery(),
 	)
 
+	// Create Splunk client
+	client := splunk.NewClient(baseURL, authToken)
+
+	//////////////////////
+	// REGISTER ALL PROMPTS //
+	//////////////////////
+	splunk.RegisterPrompts(s, client)
+
 	//////////////////////
 	// SAVED SEARCHES //
 	//////////////////////
@@ -47,7 +57,6 @@ func main() {
 	)
 
 	s.AddTool(splunkTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		client := splunk.NewClient(baseURL, authToken)
 		count := 10
 		offset := 0
 		// Limit the count parameter to 100
@@ -89,12 +98,15 @@ func main() {
 		mcp.WithDescription("List Splunk fired alerts (paginated by count and offset arguments)"),
 		mcp.WithNumber("count", mcp.Description("Number of results to return (max 100, default 10)")),
 		mcp.WithNumber("offset", mcp.Description("Offset for pagination (default 0)")),
+		mcp.WithString("ss_name", mcp.Description("Search name pattern to filter alerts (default \"*\")")),
+		mcp.WithString("earliest", mcp.Description("Time range to look back (default \"-24h\")")),
 	)
 
 	s.AddTool(alertsTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		client := splunk.NewClient(baseURL, authToken)
 		count := 10
 		offset := 0
+		ssName := "*"
+		earliest := "-24h"
 		if v, ok := request.Params.Arguments["count"].(float64); ok {
 			count = int(v)
 			if count > 500 { // more generous limit, since we're using SPL in API and the entire json is returned already.
@@ -104,7 +116,13 @@ func main() {
 		if v, ok := request.Params.Arguments["offset"].(float64); ok {
 			offset = int(v)
 		}
-		alerts, total, err := client.GetFiredAlerts(ctx, count, offset)
+		if v, ok := request.Params.Arguments["ss_name"].(string); ok {
+			ssName = v
+		}
+		if v, ok := request.Params.Arguments["earliest"].(string); ok {
+			earliest = v
+		}
+		alerts, total, err := client.GetFiredAlerts(ctx, count, offset, ssName, earliest)
 		if err != nil {
 			return mcp.NewToolResultError("failed to get fired alerts: " + err.Error()), nil
 		}
@@ -133,7 +151,6 @@ func main() {
 	)
 
 	s.AddTool(alertsAllTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		client := splunk.NewClient(baseURL, authToken)
 		count := 10
 		offset := 0
 		title := ""
@@ -177,7 +194,6 @@ func main() {
 	)
 
 	s.AddTool(indexesTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		client := splunk.NewClient(baseURL, authToken)
 		count := 10
 		offset := 0
 		if v, ok := request.Params.Arguments["count"].(float64); ok {
@@ -219,7 +235,6 @@ func main() {
 	)
 
 	s.AddTool(macrosTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		client := splunk.NewClient(baseURL, authToken)
 		count := 10
 		offset := 0
 		if v, ok := request.Params.Arguments["count"].(float64); ok {
@@ -249,6 +264,47 @@ func main() {
 			return mcp.NewToolResultError("failed to marshal results: " + err.Error()), nil
 		}
 		return mcp.NewToolResultText(note + "\n\n" + string(data)), nil
+	})
+
+	//////////////////////
+	// REGISTER ALL RESOURCES //
+	//////////////////////
+	// Get current working directory to determine path to resources
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("Failed to get working directory: %v", err)
+	}
+
+	// If running from cmd/mcp-server-splunk, resources are two levels up
+	var resourcePath string
+	if strings.HasSuffix(cwd, "cmd/mcp-server-splunk") {
+		resourcePath = filepath.Join("..", "..", "resources", "data-dictionary.csv")
+	} else {
+		// Assume running from project root
+		resourcePath = filepath.Join("resources", "data-dictionary.csv")
+	}
+
+	// Register data dictionary resource
+	dataDictResource := mcp.NewResource(
+		"docs://data-dictionary",
+		"Data Dictionary",
+		mcp.WithResourceDescription("Splunk Data Dictionary containing information about data sources, criticality, indexes, sourcetypes, contact persons, and their metadata"),
+		mcp.WithMIMEType("text/csv"),
+	)
+
+	s.AddResource(dataDictResource, func(ctx context.Context, request mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
+		content, err := os.ReadFile(resourcePath)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read data dictionary from %s: %v", resourcePath, err)
+		}
+
+		return []mcp.ResourceContents{
+			mcp.TextResourceContents{
+				URI:      "docs://data-dictionary",
+				MIMEType: "text/csv",
+				Text:     string(content),
+			},
+		}, nil
 	})
 
 	// Start the server

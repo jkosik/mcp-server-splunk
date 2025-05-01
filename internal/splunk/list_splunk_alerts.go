@@ -96,13 +96,3 @@ func (c *Client) GetAlerts(ctx context.Context, count, offset int, title string)
 	// But we provide cursor only the "count" of results. The real total is however known to the MCP backend and provided properly.
 	return alerts[start:end], total, nil
 }
-
-// getString safely gets a string from a map
-func getString(m map[string]interface{}, key string) string {
-	if v, ok := m[key]; ok {
-		if s, ok := v.(string); ok {
-			return s
-		}
-	}
-	return ""
-}

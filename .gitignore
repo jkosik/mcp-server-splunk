@@ -1,2 +1,4 @@
 wip/*
 cmd/mcp-server-splunk/mcp-server-splunk
+docs/images*
+resources/data-dictionary.csv

@@ -17,6 +17,8 @@ Supports STDIO and SSE (Server-Sent Events HTTP API). Uses github.com/mark3labs/
     - Parameters:
         - `count` (number, optional): Number of results to return (max 100, default 10)
         - `offset` (number, optional): Offset for pagination (default 0)
+        - `ss_name` (string, optional): Search name pattern to filter alerts (default "*")
+        - `earliest` (string, optional): Time range to look back (default "-24h")
 - `list_splunk_indexes`
     - Parameters:
         - `count` (number, optional): Number of results to return (max 100, default 10)
@@ -26,6 +28,9 @@ Supports STDIO and SSE (Server-Sent Events HTTP API). Uses github.com/mark3labs/
         - `count` (number, optional): Number of results to return (max 100, default 10)
         - `offset` (number, optional): Offset for pagination (default 0)
 
+## MCP Prompts and Resources
+- `internal/splunk/prompt.go` implements an MCP Prompt to find Splunk alerts for a specific keyword (e.g. GitHub or OKTA) and instructs Cursor to utilise multiple MCP tools to review all Splunk alerts, indexes and macros first to provide the best answer.
+- `cmd/mcp/server/main.go` implements MCP Resource in the form of local CSV file with Splunk related content, providing further context to the chat.
 
 ## Usage
 ### STDIO mode (default)
@@ -58,6 +63,18 @@ curl -X POST "http://localhost:3001/message?sessionId=YOUR_SESSION_ID" \
 ```
 
 ## Cursor integration
+By configuring MCP Settings in Cursor, you can include remote data directly into the LLM context.
+
+![Demo](docs/mcp-short.gif)
+
+Integrate STDIO or SSE MCP Servers (see below) and use Cursor Chat.
+Cursor will automatically try to use MCP Tools, Prompts or Re
+Sample prompts:
+- `How many MCP tools for Splunk are available?`
+- `How many Splunk indexes do we have?`
+- `Can you list first 5 Splunk macros including underlying queries?`
+- `How many alers with "Alert_CRITICAL" in the name were triggered in the last day?`
+- `Check the Data Dictionary (MCP Resource) and find the contact person for the Splunk index XYZ.`
 
 ### STDIO mode
 Build the server:
@@ -70,12 +87,12 @@ Update `~/.cursor/mcp.json`
 {
   "mcpServers": {
     "splunk_stdio": {
-      "name": "Splunk MCP Server (STDIO mode)",
+      "name": "Splunk MCP Server (STDIO)",
       "description": "MCP server for Splunk integration",
       "type": "stdio",
       "command": "/Users/juraj/data/github.com/jkosik/mcp-server-splunk/cmd/mcp-server-splunk/mcp-server-splunk",
       "env": {
-        "SPLUNK_URL": "https://your-splunk-instance",
+        "SPLUNK_URL": "https://your-splunk-instance:8089",
         "SPLUNK_TOKEN": "your-splunk-token"
       }
     }
@@ -102,3 +119,4 @@ Update `~/.cursor/mcp.json`
   }
 }
 ```
+
