@@ -74,7 +74,7 @@ Sample prompts:
 - `How many Splunk indexes do we have?`
 - `Can you list first 5 Splunk macros including underlying queries?`
 - `How many alers with "Alert_CRITICAL" in the name were triggered in the last day?`
-- `Check the Data Dictionary (MCP Resource) and find the contact person for the Splunk index XYZ.`
+- `Read the MCP Resource "Data Dictionary" and find the contact person for the Splunk index XYZ.`
 
 ### STDIO mode
 Build the server:
