@@ -35,8 +35,8 @@ Supports STDIO and SSE (Server-Sent Events HTTP API). Uses github.com/mark3labs/
 ## Usage
 ### STDIO mode (default)
 ```bash
-SPLUNK_URL=https://your-splunk-instance
-SPLUNK_TOKEN=your-splunk-token
+export SPLUNK_URL=https://your-splunk-instance
+export SPLUNK_TOKEN=your-splunk-token
 
 # List available tools
 echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' | go run cmd/mcp-server-splunk/main.go | jq
@@ -47,8 +47,8 @@ echo '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_splun
 
 ## SSE mode (Server-Sent Events HTTP API)
 ```bash
-SPLUNK_URL=https://your-splunk-instance
-SPLUNK_TOKEN=your-splunk-token
+export SPLUNK_URL=https://your-splunk-instance
+export SPLUNK_TOKEN=your-splunk-token
 
 # Start the server
 go run cmd/mcp-server-splunk/main.go -transport sse -port 3001
@@ -102,7 +102,11 @@ Update `~/.cursor/mcp.json`
 
 ### SSE mode
 Start the server:
-```
+```bash
+export SPLUNK_URL=https://your-splunk-instance
+export SPLUNK_TOKEN=your-splunk-token
+
+# Start the server
 go run cmd/mcp-server-splunk/main.go -transport sse -port 3001
 ```
 
