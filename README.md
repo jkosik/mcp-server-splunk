@@ -35,8 +35,8 @@ Supports STDIO and SSE (Server-Sent Events HTTP API). Uses github.com/mark3labs/
 ## Usage
 ### STDIO mode (default)
 ```bash
-SPLUNK_URL=https://your-splunk-instance
-SPLUNK_TOKEN=your-splunk-token
+export SPLUNK_URL=https://your-splunk-instance
+export SPLUNK_TOKEN=your-splunk-token
 
 # List available tools
 echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' | go run cmd/mcp-server-splunk/main.go | jq
@@ -47,8 +47,8 @@ echo '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_splun
 
 ## SSE mode (Server-Sent Events HTTP API)
 ```bash
-SPLUNK_URL=https://your-splunk-instance
-SPLUNK_TOKEN=your-splunk-token
+export SPLUNK_URL=https://your-splunk-instance
+export SPLUNK_TOKEN=your-splunk-token
 
 # Start the server
 go run cmd/mcp-server-splunk/main.go -transport sse -port 3001
@@ -74,7 +74,7 @@ Sample prompts:
 - `How many Splunk indexes do we have?`
 - `Can you list first 5 Splunk macros including underlying queries?`
 - `How many alers with "Alert_CRITICAL" in the name were triggered in the last day?`
-- `Check the Data Dictionary (MCP Resource) and find the contact person for the Splunk index XYZ.`
+- `Read the MCP Resource "Data Dictionary" and find the contact person for the Splunk index XYZ.`
 
 ### STDIO mode
 Build the server:
@@ -102,7 +102,11 @@ Update `~/.cursor/mcp.json`
 
 ### SSE mode
 Start the server:
-```
+```bash
+export SPLUNK_URL=https://your-splunk-instance
+export SPLUNK_TOKEN=your-splunk-token
+
+# Start the server
 go run cmd/mcp-server-splunk/main.go -transport sse -port 3001
 ```
 

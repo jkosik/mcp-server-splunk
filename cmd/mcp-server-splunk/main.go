@@ -52,7 +52,7 @@ func main() {
 	//////////////////////
 	splunkTool := mcp.NewTool("list_splunk_saved_searches",
 		mcp.WithDescription("List Splunk saved searches (paginated by count and offset arguments)."),
-		mcp.WithNumber("count", mcp.Description("Number of results to return (max 100, default 10)")),
+		mcp.WithNumber("count", mcp.Description("Number of results to return (default 10)")),
 		mcp.WithNumber("offset", mcp.Description("Offset for pagination (default 0)")),
 	)
 
@@ -96,14 +96,14 @@ func main() {
 	//////////////////////
 	alertsTool := mcp.NewTool("list_splunk_fired_alerts",
 		mcp.WithDescription("List Splunk fired alerts (paginated by count and offset arguments)"),
-		mcp.WithNumber("count", mcp.Description("Number of results to return (max 100, default 10)")),
+		mcp.WithNumber("count", mcp.Description("Number of results to return (default 100)")),
 		mcp.WithNumber("offset", mcp.Description("Offset for pagination (default 0)")),
 		mcp.WithString("ss_name", mcp.Description("Search name pattern to filter alerts (default \"*\")")),
 		mcp.WithString("earliest", mcp.Description("Time range to look back (default \"-24h\")")),
 	)
 
 	s.AddTool(alertsTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		count := 10
+		count := 100
 		offset := 0
 		ssName := "*"
 		earliest := "-24h"
@@ -145,7 +145,7 @@ func main() {
 	//////////////////////
 	alertsAllTool := mcp.NewTool("list_splunk_alerts",
 		mcp.WithDescription("List all Splunk alerts (saved searches with actions). Supports pagination and optional case-insensitive title filter."),
-		mcp.WithNumber("count", mcp.Description("Number of results to return (max 100, default 10)")),
+		mcp.WithNumber("count", mcp.Description("Number of results to return (default 10)")),
 		mcp.WithNumber("offset", mcp.Description("Offset for pagination (default 0)")),
 		mcp.WithString("title", mcp.Description("Case-insensitive substring to filter alert titles (optional)")),
 	)
@@ -189,7 +189,7 @@ func main() {
 	//////////////////////
 	indexesTool := mcp.NewTool("list_splunk_indexes",
 		mcp.WithDescription("List Splunk indexes (paginated by count and offset arguments)"),
-		mcp.WithNumber("count", mcp.Description("Number of results to return (max 100, default 10)")),
+		mcp.WithNumber("count", mcp.Description("Number of results to return (default 10)")),
 		mcp.WithNumber("offset", mcp.Description("Offset for pagination (default 0)")),
 	)
 
@@ -230,7 +230,7 @@ func main() {
 	//////////////////////
 	macrosTool := mcp.NewTool("list_splunk_macros",
 		mcp.WithDescription("List Splunk macros (paginated by count and offset arguments)."),
-		mcp.WithNumber("count", mcp.Description("Number of results to return (max 100, default 10)")),
+		mcp.WithNumber("count", mcp.Description("Number of results to return (default 10)")),
 		mcp.WithNumber("offset", mcp.Description("Offset for pagination (default 0)")),
 	)
 
