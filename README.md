@@ -1,5 +1,4 @@
 # MCP Server for Splunk
-[![smithery badge](https://smithery.ai/badge/@jkosik/mcp-server-splunk)](https://smithery.ai/server/@jkosik/mcp-server-splunk)
 
 A Go implementation of the MCP server for Splunk.
 Supports STDIO and SSE (Server-Sent Events HTTP API). Uses github.com/mark3labs/mcp-go SDK.
@@ -64,13 +63,10 @@ curl -X POST "http://localhost:3001/message?sessionId=YOUR_SESSION_ID" \
 ```
 
 ## Installing via Smithery
-`Dockerfile` and `smithery.yaml` are used to host this MCP implementation at https://smithery.ai
+[![smithery badge](https://smithery.ai/badge/@jkosik/mcp-server-splunk)](https://smithery.ai/server/@jkosik/mcp-server-splunk)
 
-To install mcp-server-splunk for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@jkosik/mcp-server-splunk):
+`Dockerfile` and `smithery.yaml` are used to support hosting this MCP server at [Smithery](https://smithery.ai/server/@jkosik/.
 
-```bash
-npx -y @smithery/cli install @jkosik/mcp-server-splunk --client claude
-```
 
 ### Local Docker build and run
 ```
