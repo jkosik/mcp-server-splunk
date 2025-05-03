@@ -1,11 +1,25 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
 startCommand:
   type: stdio
   configSchema:
+    # JSON Schema defining the configuration options for the MCP.
     type: object
-    properties: {}
-  commandFunction: |
-    (config) => ({
-      command: '/usr/local/bin/mcp-server-splunk',
-      args: [],
-      env: {}
-    })
+    required:
+      - splunkUrl
+      - splunkToken
+    properties:
+      splunkUrl:
+        type: string
+        description: Base URL of the Splunk management endpoint (e.g.,
+          https://your-splunk-instance:8089)
+      splunkToken:
+        type: string
+        description: Bearer token for Splunk REST API
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({command: '/app/mcp-server-splunk', env: {SPLUNK_URL: config.splunkUrl, SPLUNK_TOKEN: config.splunkToken}})
+  exampleConfig:
+    splunkUrl: https://splunk.example.com:8089
+    splunkToken: your-splunk-token
