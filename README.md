@@ -63,7 +63,7 @@ curl -X POST "http://localhost:3001/message?sessionId=YOUR_SESSION_ID" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' | jq
 ```
 
-### Installing via Smithery
+## Installing via Smithery
 `Dockerfile` and `smithery.yaml` are used to host this MCP implementation at https://smithery.ai
 
 To install mcp-server-splunk for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@jkosik/mcp-server-splunk):
