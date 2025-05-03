@@ -1,28 +1,11 @@
-### STDIO mode (default)
-```bash
-export SPLUNK_URL=https://your-splunk-instance
-export SPLUNK_TOKEN=your-splunk-token
-
-# List available tools
-echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' | go run cmd/mcp-server-splunk/main.go | jq
-
-# Call list_splunk_saved_searches tool
-echo '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_splunk_saved_searches","arguments":{}}}' | go run cmd/mcp-server-splunk/main.go | jq
-```
-
-## SSE mode (Server-Sent Events HTTP API)
-```bash
-export SPLUNK_URL=https://your-splunk-instance
-export SPLUNK_TOKEN=your-splunk-token
-
-# Start the server
-go run cmd/mcp-server-splunk/main.go -transport sse -port 3001
-
-# Call the server and get Session ID from the output. Do not terminate the session.
-curl http://localhost:3001/sse
-
-# Keep session running and and use different terminal window for the final MCP call
-curl -X POST "http://localhost:3001/message?sessionId=YOUR_SESSION_ID" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' | jq
-```
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties: {}
+  commandFunction: |
+    (config) => ({
+      command: '/usr/local/bin/mcp-server-splunk',
+      args: [],
+      env: {}
+    })

@@ -124,3 +124,16 @@ Update `~/.cursor/mcp.json`
 }
 ```
 
+## Smithery
+`Dockerfile` and `smithery.yaml` are used to host this MCP implementation at https://smithery.ai
+
+### Local build and run
+```
+docker build -t mcp-server-splunk .
+
+echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' | \
+docker run --rm -i \
+  -e SPLUNK_URL=https://your-splunk-instance \
+  -e SPLUNK_TOKEN=your-splunk-token \
+  mcp-server-splunk | jq
+```
