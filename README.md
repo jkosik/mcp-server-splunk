@@ -34,14 +34,6 @@ Supports STDIO and SSE (Server-Sent Events HTTP API). Uses github.com/mark3labs/
 - `cmd/mcp/server/main.go` implements MCP Resource in the form of local CSV file with Splunk related content, providing further context to the chat.
 
 ## Usage
-### Installing via Smithery
-
-To install mcp-server-splunk for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@jkosik/mcp-server-splunk):
-
-```bash
-npx -y @smithery/cli install @jkosik/mcp-server-splunk --client claude
-```
-
 ### STDIO mode (default)
 ```bash
 export SPLUNK_URL=https://your-splunk-instance
@@ -69,6 +61,26 @@ curl http://localhost:3001/sse
 curl -X POST "http://localhost:3001/message?sessionId=YOUR_SESSION_ID" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' | jq
+```
+
+### Installing via Smithery
+`Dockerfile` and `smithery.yaml` are used to host this MCP implementation at https://smithery.ai
+
+To install mcp-server-splunk for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@jkosik/mcp-server-splunk):
+
+```bash
+npx -y @smithery/cli install @jkosik/mcp-server-splunk --client claude
+```
+
+### Local Docker build and run
+```
+docker build -t mcp-server-splunk .
+
+echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' | \
+docker run --rm -i \
+  -e SPLUNK_URL=https://your-splunk-instance \
+  -e SPLUNK_TOKEN=your-splunk-token \
+  mcp-server-splunk | jq
 ```
 
 ## Cursor integration
@@ -133,16 +145,3 @@ Update `~/.cursor/mcp.json`
 }
 ```
 
-## Smithery
-`Dockerfile` and `smithery.yaml` are used to host this MCP implementation at https://smithery.ai
-
-### Local build and run
-```
-docker build -t mcp-server-splunk .
-
-echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' | \
-docker run --rm -i \
-  -e SPLUNK_URL=https://your-splunk-instance \
-  -e SPLUNK_TOKEN=your-splunk-token \
-  mcp-server-splunk | jq
-```
