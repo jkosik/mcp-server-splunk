@@ -141,3 +141,4 @@ Update `~/.cursor/mcp.json`
 }
 ```
 
+_Certified by MCP Review: https://mcpreview.com/mcp-servers/jkosik/mcp-server-splunk_
