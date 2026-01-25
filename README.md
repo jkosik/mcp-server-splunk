@@ -3,7 +3,7 @@
 A Go implementation of the MCP server for Splunk.
 Supports STDIO and SSE (Server-Sent Events HTTP API). Uses github.com/mark3labs/mcp-go SDK.
 
-## MCP Tools implemented
+## MCP Tools and Prompts
 - `list_splunk_saved_searches`
     - Parameters:
         - `count` (number, optional): Number of results to return (max 100, default 100)
@@ -28,12 +28,11 @@ Supports STDIO and SSE (Server-Sent Events HTTP API). Uses github.com/mark3labs/
         - `count` (number, optional): Number of results to return (max 100, default 10)
         - `offset` (number, optional): Offset for pagination (default 0)
 
-## MCP Prompts and Resources
 - `internal/splunk/prompt.go` implements an MCP Prompt to find Splunk alerts for a specific keyword (e.g. GitHub or OKTA) and instructs Cursor to utilise multiple MCP tools to review all Splunk alerts, indexes and macros first to provide the best answer.
 - `cmd/mcp/server/main.go` implements MCP Resource in the form of local CSV file with Splunk related content, providing further context to the chat.
 
-## Usage
-### STDIO mode (default)
+## Local usage and testing
+#### STDIO mode (default)
 ```bash
 export SPLUNK_URL=https://your-splunk-instance:8089
 export SPLUNK_TOKEN=your-splunk-token
@@ -45,7 +44,7 @@ echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' | go run cmd/m
 echo '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_splunk_saved_searches","arguments":{}}}' | go run cmd/mcp-server-splunk/main.go | jq
 ```
 
-## SSE mode (Server-Sent Events HTTP API)
+#### SSE mode (Server-Sent Events HTTP API)
 ```bash
 export SPLUNK_URL=https://your-splunk-instance:8089
 export SPLUNK_TOKEN=your-splunk-token
