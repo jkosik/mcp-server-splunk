@@ -3,6 +3,67 @@
 A Go implementation of the MCP server for Splunk.
 Supports STDIO and SSE (Server-Sent Events HTTP API). Uses github.com/mark3labs/mcp-go SDK.
 
+## Quickstart - Cursor integration
+By configuring MCP Settings in Cursor, you can include remote data directly into the LLM context.
+
+![Demo](docs/mcp-short.gif)
+
+#### STDIO mode
+```bash
+cd /tmp # CHANGE ME
+git clone https://github.com/jkosik/mcp-server-splunk.git
+cd mcp-server-splunk/cmd/mcp-server-splunk/
+```
+
+Update Cursor settings in `~/.cursor/mcp.json`:
+```json
+{
+  "mcpServers": {
+    "splunk_stdio": {
+      "name": "Splunk MCP Server (STDIO)",
+      "description": "MCP server for Splunk",
+      "type": "stdio",
+      "command": "/tmp/mcp-server-splunk/cmd/mcp-server-splunk/mcp-server-splunk", # CHANGE ME
+      "env": {
+        "SPLUNK_URL": "https://changeme.splunkcloud.com:8089", # CHANGE ME
+        "SPLUNK_TOKEN": "abcd" # CHANGE ME
+      }
+    }
+  }
+}
+```
+
+
+Alternatively re-build the server first:
+```
+go build -o cmd/mcp-server-splunk/mcp-server-splunk cmd/mcp-server-splunk/main.go
+```
+
+#### SSE mode
+Start the server:
+```bash
+export SPLUNK_URL=https://your-splunk-instance:8089
+export SPLUNK_TOKEN=your-splunk-token
+
+# Start the server
+go run cmd/mcp-server-splunk/main.go -transport sse -port 3001
+```
+
+Update Cursor settings in `~/.cursor/mcp.json`:
+```json
+{
+  "mcpServers": {
+    "splunk_sse": {
+      "name": "Splunk MCP Server (SSE)",
+      "description": "MCP server for Splunk integration (SSE mode)",
+      "type": "sse",
+      "url": "http://localhost:3001/sse"
+    }
+  }
+}
+```
+
+
 ## MCP Tools and Prompts
 - `list_splunk_saved_searches`
     - Parameters:
@@ -66,78 +127,5 @@ curl -X POST "http://localhost:3001/message?sessionId=YOUR_SESSION_ID" \
 
 `Dockerfile` and `smithery.yaml` are used to support hosting this MCP server at [Smithery](https://smithery.ai/server/@jkosik/.
 
-
-### Local Docker build and run
-```
-docker build -t mcp-server-splunk .
-
-echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' | \
-docker run --rm -i \
-  -e SPLUNK_URL=https://your-splunk-instance:8089 \
-  -e SPLUNK_TOKEN=your-splunk-token \
-  mcp-server-splunk | jq
-```
-
-## Cursor integration
-By configuring MCP Settings in Cursor, you can include remote data directly into the LLM context.
-
-![Demo](docs/mcp-short.gif)
-
-Integrate STDIO or SSE MCP Servers (see below) and use Cursor Chat.
-Cursor will automatically try to use MCP Tools, Prompts or Re
-Sample prompts:
-- `How many MCP tools for Splunk are available?`
-- `How many Splunk indexes do we have?`
-- `Can you list first 5 Splunk macros including underlying queries?`
-- `How many alers with "Alert_CRITICAL" in the name were fired in the last day?`
-- `Read the MCP Resource "Data Dictionary" and find the contact person for the Splunk index XYZ.`
-
-### STDIO mode
-Build the server:
-```
-go build -o cmd/mcp-server-splunk/mcp-server-splunk cmd/mcp-server-splunk/main.go
-```
-
-Update `~/.cursor/mcp.json`
-```json
-{
-  "mcpServers": {
-    "splunk_stdio": {
-      "name": "Splunk MCP Server (STDIO)",
-      "description": "MCP server for Splunk integration",
-      "type": "stdio",
-      "command": "/Users/juraj/data/github.com/jkosik/mcp-server-splunk/cmd/mcp-server-splunk/mcp-server-splunk",
-      "env": {
-        "SPLUNK_URL": "https://your-splunk-instance:8089",
-        "SPLUNK_TOKEN": "your-splunk-token"
-      }
-    }
-  }
-}
-```
-
-### SSE mode
-Start the server:
-```bash
-export SPLUNK_URL=https://your-splunk-instance:8089
-export SPLUNK_TOKEN=your-splunk-token
-
-# Start the server
-go run cmd/mcp-server-splunk/main.go -transport sse -port 3001
-```
-
-Update `~/.cursor/mcp.json`
-```json
-{
-  "mcpServers": {
-    "splunk_sse": {
-      "name": "Splunk MCP Server (SSE)",
-      "description": "MCP server for Splunk integration (SSE mode)",
-      "type": "sse",
-      "url": "http://localhost:3001/sse"
-    }
-  }
-}
-```
 
 _Certified by MCP Review: https://mcpreview.com/mcp-servers/jkosik/mcp-server-splunk_
