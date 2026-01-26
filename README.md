@@ -26,7 +26,7 @@ Update Cursor settings in `~/.cursor/mcp.json`:
       "command": "/tmp/mcp-server-splunk/cmd/mcp-server-splunk/mcp-server-splunk", # CHANGE ME
       "env": {
         "SPLUNK_URL": "https://changeme.splunkcloud.com:8089", # CHANGE ME
-        "SPLUNK_TOKEN": "abcde" # CHANGE ME
+        "SPLUNK_TOKEN": "abcdef" # CHANGE ME
       }
     }
   }
