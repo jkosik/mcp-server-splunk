@@ -20,8 +20,8 @@ Update Cursor settings in `~/.cursor/mcp.json`:
 {
   "mcpServers": {
     "splunk_stdio": {
-      "name": "Splunk MCP Server (STDIO)",
-      "description": "MCP server for Splunk",
+      "name": "Splunk MCP Server",
+      "description": "Splunk MCP server",
       "type": "stdio",
       "command": "/tmp/mcp-server-splunk/cmd/mcp-server-splunk/mcp-server-splunk", # CHANGE ME
       "env": {
